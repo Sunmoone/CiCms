@@ -1,0 +1,79 @@
+/* ~~~~~~~~~ layout ~~~~~~~~~~ */
+
+#container {
+	width: 840px;
+	margin: 20px auto;
+	background: #fff;
+	padding: 30px;
+	overflow: hidden;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+}
+
+/* ~~~~~~~~~ header ~~~~~~~~~~ */
+
+header {
+	height: 30px;
+}
+header #logo {
+	float: left;
+}
+/* ~~~~~~~~~ nav ~~~~~~~~~~ */
+nav {
+	margin: 20px 0;
+}
+nav ul {
+	width: 100%;
+	background: #BDD2FF;
+}	
+/* ~~~~~~~~~ hgroup ~~~~~~~~~~ */
+hgroup {
+	margin: 10px 0 20px;
+	padding: 5px 0;
+	border-bottom: 1px solid #BDD2FF;
+}		
+/* ~~~~~~~~~ article ~~~~~~~~~~ */
+
+article {
+	width: 100%;
+	overflow: hidden;
+}
+
+section {
+	float: left;
+	width: 380px;
+	background: #fff;
+	padding: 10px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+}
+
+/* ~~~~~~~~~ aside ~~~~~~~~~~ */
+
+aside {
+	float: right;
+	width: 388px;
+	border:1px solid #eee;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	background: #fff;
+	padding: 10px;
+}
+	aside h2, aside p {
+		color: #ddd;	
+	}
+			
+/* ~~~~~~~~~ footer ~~~~~~~~~~ */
+			
+footer {
+	width: 840px;
+	margin: 20px auto;
+	font-size: 1.2em;
+	text-align: right;
+}
+
+/* ~~~~~~~~~ attributes ~~~~~~~~~~ */
+
+img[src*="graphic"] {
+	float: right;	
+}
