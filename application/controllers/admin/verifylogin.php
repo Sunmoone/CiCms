@@ -40,7 +40,7 @@ class VerifyLogin extends CI_Controller {
 			$sess_array = array();
 			foreach($user as $row)
 			{
-				if (!$row->roles_status)
+				if (!$row->role_status)
 				{
 					$this->session->set_flashdata('error', '你所在的组被限制登录！');
 					go_back();
