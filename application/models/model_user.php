@@ -18,11 +18,11 @@ class Model_user extends CI_Model {
 	 */
 	public function login($username, $password)
 	{
-		$this->db->select('user.id, user.roles_id, user.username, user.password, user.status, role.permission, role.status as role_status');
+		$this->db->select('user.id, user.role_id, user.username, user.password, user.status, role.permission, role.status as role_status');
 		$this->db->from('user');
 		$this->db->where('username = ' . "'" . $username . "'");
 		$this->db->where('password = ' . "'" . sha1($password) . "'");
-		$this->db->join('role', 'role.id=user.roles_id');
+		$this->db->join('role', 'role.id=user.role_id');
 		$this->db->limit(1);
 
 		$query = $this->db->get();
