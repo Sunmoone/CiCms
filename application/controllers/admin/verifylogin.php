@@ -6,8 +6,8 @@ class VerifyLogin extends CI_Controller {
 	{
 		parent::__construct();
 
-		$this->load->model('users', '', TRUE);
-		$this->load->model('nodes', '', TRUE);
+		$this->load->model('model_user', 'user', TRUE);
+		$this->load->model('model_node', 'node', TRUE);
 		$this->load->library('tree');
 	}
 
@@ -33,7 +33,7 @@ class VerifyLogin extends CI_Controller {
 	{
 		$username = $this->input->post('username');
 
-		$user = $this->users->login($username, $password);
+		$user = $this->user->login($username, $password);
 
 		if ($user)
 		{
@@ -77,7 +77,7 @@ class VerifyLogin extends CI_Controller {
 	private function permission_to_array($permission)
 	{
 		$tree = new Tree();
-		$result = $this->nodes->get_nodes_by_id($permission);
+		$result = $this->node->get_nodes_by_id($permission);
 		$this->tree->setTree($result);
 		$a = $this->tree->buildTree();
 		$b = array();
