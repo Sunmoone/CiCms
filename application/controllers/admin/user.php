@@ -41,7 +41,7 @@ class User extends admin_Controller {
 	public function create() 
 	{
 		$roles = $this->role->get_roles();
-		$this->_data['roles_list'] = $roles['data'];
+		$this->_data['role_list'] = $roles['data'];
 
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
@@ -55,7 +55,7 @@ class User extends admin_Controller {
 						'password' => $this->input->post('password', TRUE),
 						'nickname' => $this->input->post('nickname', TRUE),
 						'email'    => $this->input->post('email', TRUE),
-						'roles_id' => $this->input->post('roles_id', TRUE),
+						'role_id' => $this->input->post('role_id', TRUE),
 						'status'   => $this->input->post('status', TRUE),
 						'created'  => time()
 					)
@@ -94,7 +94,7 @@ class User extends admin_Controller {
 			show_error('禁止访问：危险操作');
 		}
 		$roles = $this->role->get_roles();
-		$this->_data['roles_list'] = $roles['data'];
+		$this->_data['role_list'] = $roles['data'];
 
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
@@ -108,7 +108,7 @@ class User extends admin_Controller {
 						'username' => $this->input->post('username', TRUE),
 						'nickname' => $this->input->post('nickname', TRUE),
 						'email'    => $this->input->post('email', TRUE),
-						'roles_id' => $this->input->post('roles_id', TRUE),
+						'role_id'  => $this->input->post('role_id', TRUE),
 						'status'   => $this->input->post('status', TRUE),
 					)
 				);
@@ -183,7 +183,7 @@ class User extends admin_Controller {
      */
 	public function _check_name($str)
 	{
-		if ($this->users->check_exist('username', $str, $this->_id))
+		if ($this->user->check_exist('username', $str, $this->_id))
 		{
 			$this->form_validation->set_message('_check_name', '系统已经存在一个为 ' . $str . ' 的用户名！');
 			return FALSE;
@@ -198,7 +198,7 @@ class User extends admin_Controller {
      */
 	public function _check_email($str)
 	{
-		if ($this->users->check_exist('email', $str, $this->_id))
+		if ($this->user->check_exist('email', $str, $this->_id))
 		{
 			$this->form_validation->set_message('_check_email', '系统已经存在一个为 ' . $str . ' 的邮箱！');
 			return FALSE;
@@ -213,7 +213,7 @@ class User extends admin_Controller {
      */
 	public function _check_nickName($str)
 	{
-		if ($this->users->check_exist('nickname', $str, $this->_id))
+		if ($this->user->check_exist('nickname', $str, $this->_id))
 		{
 			$this->form_validation->set_message('_check_nickName', '系统已经存在一个为 ' . $str . ' 的昵称！');
 			return FALSE;
