@@ -32,11 +32,11 @@
       <dt class="light_gray">选择用户组</dt>
       <dl class="set_blk">
         <dd>
-        <select name="roles_id">
+        <select name="role_id">
           <option value="0">请选择</option>
-          <?php if ($roles_list):?>
-          <?php foreach($roles_list as $val):?>
-            <option value="<?php echo $val['id'];?>" <?php if ($val['id'] == $user['roles_id']): ?> selected <?php endif;?>><?php echo $val['name'];?></option>
+          <?php if ($role_list):?>
+          <?php foreach($role_list as $val):?>
+            <option value="<?php echo $val['id'];?>" <?php if ($val['id'] == $user['role_id']): ?> selected <?php endif;?>><?php echo $val['name'];?></option>
           <?php endforeach;?>
           <?php endif;?>
         </select>
