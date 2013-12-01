@@ -22,6 +22,7 @@ class Model_node extends CI_Model {
 			$this->db->where($where[0], $where[1]);
 		}
 		$this->db->order_by('id', 'desc');
+		$this->db->order_by('pid', 'desc');
 
 		$query = $this->db->get('node');
 

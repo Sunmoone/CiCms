@@ -10,6 +10,7 @@ class Node extends admin_Controller {
 
 		$this->load->model('model_node', 'node', TRUE);
 		$this->load->library('form_validation');
+		$this->load->library('tree');
 		$this->_data['admin_url'] = uri_string();
 		$this->_data['menu'] = $this->menu;
 	}
@@ -34,9 +35,22 @@ class Node extends admin_Controller {
 		$this->pagination->initialize($config); 
 		
 		$this->_data['page'] = $this->pagination->create_links();
+
+		foreach($nodes['data'] as $k => $v) {
+			$nodes['data'][$k]['breadcrumbs'] = $this->breadcrumbs($v['id']);
+		}
 		$this->_data['nodes_list'] = $nodes['data'];
 		
 		$this->layout->view('admin/node_list', $this->_data);
+	}
+	public function breadcrumbs($id=0)
+	{
+		$node = $this->node->get_node_by_id($id);
+		if($node[0]['pid']>0) {
+			return  $this->breadcrumbs($node[0]['pid']) . '/' . $node[0]['name'];
+		} else {
+			return $node[0]['name'];
+		}
 	}
 	/**
 	 * 创建节点
@@ -84,20 +98,16 @@ class Node extends admin_Controller {
 			if ($node)
 			{
 				$this->_data['node'] = $node[0];
-			}
-			else
-			{
+			} else {
 				show_error('节点不存在或已经被删除');
 			}
-		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+		} else {
+			show_404();
 		}
 		$nodes = $this->node->get_nodes(NULL,NULL,array('level !=', 3));
 		$this->_data['nodes_list'] = $nodes['data'];
 
-		if ($_SERVER['REQUEST_METHOD'] === "POST")
+		if ($this->input->server('REQUEST_METHOD') == "POST")
 		{
 			$this->_load_validation_rules();
 
@@ -126,25 +136,35 @@ class Node extends admin_Controller {
 	 */
 	public function delete()
 	{
-		$nodes = $this->input->post('check', TRUE);
-		$deleted = 0;
-		if ($nodes && is_array($nodes))
+		if ($this->input->server('SERVER_METHOD') == "POST")
 		{
-			foreach ($nodes as $node)
-			{   
-				/* 存在子节点 不能删除 */
-				if ($this->node->get_childs_by_id($node))
-				{
-					continue;
+			$nodes = $this->input->post('check', TRUE);
+			$deleted = 0;
+			if ($nodes && is_array($nodes))
+			{
+				foreach ($nodes as $node)
+				{   
+					/* 存在子节点 不能删除 */
+					if ($this->node->get_childs_by_id($node))
+					{
+						continue;
+					}
+					$query = $this->node->delete_node($node);
+					if ($query)
+					{
+						$deleted++;
+					}
+					
 				}
-				$query = $this->node->delete_node($node);
-				if ($query)
-				{
-					$deleted++;
-				}
-				
+			}
+		} else {
+			$node = $this->uri->segment(4);
+			if ($this->node->delete_node($node))
+			{
+				$deleted++;
 			}
 		}
+		
 		$msg = ($deleted > 0) ? '节点已经删除！' : '没有节点被删除，请删除子节点后重试！';
 		$notify = ($deleted > 0) ? 'success' : 'error';
 

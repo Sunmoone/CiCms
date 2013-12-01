@@ -5,7 +5,7 @@
 </div>
      
 <div class="btn_blk">
-	<div class="fl"><?php echo $page;?></div>
+	<div class="fl"></div>
 	<div class="fr">
 		<a href="admin/node/delete" class="btn2 fr ml20  del_all">删除</a>
 		<a href="admin/node/create" class="btn1 fr">新增</a>
@@ -29,7 +29,7 @@
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['id'];?></td>
-		<td><?php echo $val['name'];?></td>
+		<td><?php echo $val['breadcrumbs'];?></td>
 		<td><?php echo $val['title'];?></td>
 		<td><?php echo $val['pid'];?></td>
 		<td><?php echo $val['level'];?></td>
@@ -49,7 +49,7 @@
 
 <div class="btn_blk">
 	<div class="fl">说明：如果节点下面有子节点，则不能删除。</div>
-	<div class="fr">
+	<div class="fr page">
 		<?php echo $page;?>
 	</div>
 </div>

@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/CiCms';
+$config['base_url']	= 'http://localhost/github/CiCms';
 
 /*
 |--------------------------------------------------------------------------

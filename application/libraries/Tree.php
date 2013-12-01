@@ -47,7 +47,7 @@ class Tree {
 	       		$this->getTree($row["id"],$lv);
 	       	}
    		}
-   		
+   		var_dump($this->tree);
    		return $this->tree;
 	}
 
