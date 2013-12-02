@@ -5,29 +5,28 @@
  *
  */
 class Front_Controller extends CI_Controller {
+    protected $data = array();
 
-  protected $data = array();
+    public function __construct()
+    {
+        parent::__construct();
 
-	public function __construct()
-	{
-		parent::__construct();
+        header("Content-type: text/html; charset=utf-8");
 
-    header("Content-type: text/html; charset=utf-8");
-
-    $this->load->library('layout');
-    $this->layout->setLayout('front_main');
-    $this->load->model('model_content', 'content', TRUE);
-    $this->load->model('model_category', 'category', TRUE);
-    $this->load->library('tree');
-    $categorys = $this->category->get_categorys();
-    if ($categorys) {
-      $this->tree->setTree($categorys['data']);
-      $this->data['category'] = $this->tree->buildTree();
-    } else {
-      $this->data['category'] = array();
+        $this->load->library('layout');
+        $this->layout->setLayout('front_main');
+        $this->load->model('model_content', 'content', TRUE);
+        $this->load->model('model_category', 'category', TRUE);
+        $this->load->library('tree');
+        $categorys = $this->category->get_categorys();
+        if ($categorys) {
+          $this->tree->setTree($categorys['data']);
+          $this->data['category'] = $this->tree->buildTree();
+        } else {
+          $this->data['category'] = array();
+        }
+        
     }
-    
-	}
 }
 
 /**
@@ -35,65 +34,65 @@ class Front_Controller extends CI_Controller {
  *
  */
 class Admin_Controller extends CI_Controller {
-  public $admin_user = array();
+    public $admin_user = array();
 
-	public function __construct()
-	{
-		parent::__construct();
-
-    header("Content-type: text/html; charset=utf-8");
-    
-    if (!$this->session->userdata('admin_user'))
+    public function __construct()
     {
-      redirect('admin/login', 'refresh');
-    }
+        parent::__construct();
 
-		$this->load->library('layout');
+        header("Content-type: text/html; charset=utf-8");
 
-		if (isset($_GET['menu_index'])) 
-    {
-			$this->session->set_userdata('menu_index', $_GET['menu_index']);
-		}
-		if (isset($_GET['menu_current'])) 
-    {
-      $this->session->set_userdata('menu_current', $_GET['menu_current']);
-		}
-
-    $this->admin_user = $this->session->userdata('admin_user');
-    $permission = $this->admin_user['permission'];
-		$menus = array(
-      '系统' => array(
-          '用户管理' => 'admin/user',
-          '角色管理' => 'admin/role',
-          '节点管理' => 'admin/node',
-      ),
-      '内容' => array(
-      	  '分类管理' => 'admin/category',
-          '内容管理' => 'admin/content',
-      ),
-    );
-
-    $menu = array();
-    foreach($menus as $k => $v) {
-      foreach($v as $key => $val) {
-        if(in_array($val, $permission)) {
-          $menu[$k][$key] = $val;
+        if (!$this->session->userdata('admin_user'))
+        {
+            redirect('admin/login', 'refresh');
         }
-      }
-    }
-    $this->menu = $menu;
 
-    // 检查权限
-    $uri = uri_string();
-    $uri = explode('/', $uri);
-    $uri = array_slice($uri, 0, 3);
-    $uri = implode('/', $uri);
+        $this->load->library('layout');
 
-    if (!in_array($uri, $permission))
-    {
-      show_error("没有权限!");
+        if (isset($_GET['menu_index'])) 
+        {
+            $this->session->set_userdata('menu_index', $_GET['menu_index']);
+        }
+        if (isset($_GET['menu_current'])) 
+        {
+            $this->session->set_userdata('menu_current', $_GET['menu_current']);
+        }
+
+        $this->admin_user = $this->session->userdata('admin_user');
+        $permission = $this->admin_user['permission'];
+        $menus = array(
+            '系统' => array(
+                '用户管理' => 'admin/user',
+                '角色管理' => 'admin/role',
+                '节点管理' => 'admin/node',
+            ),
+            '内容' => array(
+            	  '分类管理' => 'admin/category',
+                '内容管理' => 'admin/content',
+            ),
+        );
+
+        $menu = array();
+        foreach($menus as $k => $v) {
+            foreach($v as $key => $val) {
+                if(in_array($val, $permission)) {
+                  $menu[$k][$key] = $val;
+                }
+            }
+        }
+        $this->menu = $menu;
+
+        // 检查权限
+        $uri = uri_string();
+        $uri = explode('/', $uri);
+        $uri = array_slice($uri, 0, 3);
+        $uri = implode('/', $uri);
+
+        if (!in_array($uri, $permission))
+        {
+            show_error("没有权限!");
+        }
     }
-	}
 
   function file_upload()
   {
