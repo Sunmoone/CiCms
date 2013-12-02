@@ -60,9 +60,7 @@ Cufon.replace('.caviar_dreams', { fontFamily: 'Caviar Dreams', hover: true });
 		<dl class="sidemenu<?php if (in_array($admin_url, $val)){?> show<?php }?>">
 			<dt><a href="javascript:void(0);"><img src="application/views/admin/images/imgs/<?php echo $i;?>.png" width="16" height="16" alt="" style="border: none; vertical-align: middle; padding-right: 3px; margin-top: -4px;" /><?php echo $key;?></a></dt>
 			<?php foreach ($val as $k => $v) {?>
-			<?php //if (in_array($v, $this->admin_user['permission'])):?> 
 			<dd><a href="<?php echo $v;?>"><?php echo $k;?></a></dd>
-			<?php //endif;?>
 			<?php }?>
 		</dl>
 	  <?php $i++;}?>

@@ -59,7 +59,9 @@ class Admin_Controller extends CI_Controller {
       $this->session->set_userdata('menu_current', $_GET['menu_current']);
 		}
 
-		$this->menu = array(
+    $this->admin_user = $this->session->userdata('admin_user');
+    $permission = $this->admin_user['permission'];
+		$menus = array(
       '系统' => array(
           '用户管理' => 'admin/user',
           '角色管理' => 'admin/role',
@@ -71,13 +73,21 @@ class Admin_Controller extends CI_Controller {
       ),
     );
 
+    $menu = array();
+    foreach($menus as $k => $v) {
+      foreach($v as $key => $val) {
+        if(in_array($val, $permission)) {
+          $menu[$k][$key] = $val;
+        }
+      }
+    }
+    $this->menu = $menu;
+
     // 检查权限
     $uri = uri_string();
     $uri = explode('/', $uri);
     $uri = array_slice($uri, 0, 3);
     $uri = implode('/', $uri);
-    $this->admin_user = $this->session->userdata('admin_user');
-    $permission = $this->admin_user['permission'];
 
     if (!in_array($uri, $permission))
     {
