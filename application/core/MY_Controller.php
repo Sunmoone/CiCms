@@ -95,6 +95,50 @@ class Admin_Controller extends CI_Controller {
     }
 	}
 
+  function file_upload()
+  {
+      /* 上传类配置 */
+      $config['upload_path'] = './assets/upload/'; /* NB! create this dir! */
+      $config['allowed_types'] = 'gif|jpg|png|bmp|jpeg';
+      $config['max_size']  = '0';
+      $config['max_width']  = '0';
+      $config['max_height']  = '0';
+      /* 加载上传类 */
+      $this->load->library('upload', $config);
+
+      /* 图片处理类配置 */
+      $configThumb = array();
+      $configThumb['image_library'] = 'gd2';
+      $configThumb['source_image'] = '';
+      $configThumb['create_thumb'] = TRUE;
+      $configThumb['maintain_ratio'] = TRUE;
+      /* 设置缩略图的宽和高 */
+      /* 缩略图会被保存在相同的目录 但会以 _thumb 为后缀 */
+      /* 例如 'image.jpg' 缩略图会被保存为 'image_thumb.jpg' */
+      $configThumb['width'] = 320;
+      $configThumb['height'] = 160;
+      /* 加载图片处理类 */
+      $this->load->library('image_lib');
+
+      /* 处理文件上传 */
+      $upload = $this->upload->do_upload('image');
+      if($upload === FALSE){
+          $error = $this->upload->display_errors();
+          $this->session->set_flashdata('error', $error);
+          go_back();
+      }
+      /* 获取文件数据 */
+      $data = $this->upload->data();
+      $file_name = $data['file_name'];
+      /* 如果是图片创建缩略图 */
+      if($data['is_image'] == 1) {
+          $configThumb['source_image'] = $data['full_path'];
+          $this->image_lib->initialize($configThumb);
+          $this->image_lib->resize();
+      }
+      return $file_name;
+  }
+
 }
 
 class ServerInfo
