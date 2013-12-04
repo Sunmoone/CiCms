@@ -14,6 +14,10 @@ class Node extends admin_Controller {
 		$this->_data['admin_url'] = uri_string();
 		$this->_data['menu'] = $this->menu;
 	}
+	public function page()
+	{
+		$this->index();
+	}
 	/**
 	 * 节点列表
 	 *
@@ -22,10 +26,10 @@ class Node extends admin_Controller {
 	 */
 	public function index() 
 	{	
-		$per_page = 10;
+		$per_page = 15;
 		$nodes = $this->node->get_nodes($per_page, $this->uri->segment(4));
 		$this->load->library('pagination');
-		$config['base_url'] = base_url() . 'admin/node/index/';
+		$config['base_url'] = base_url() . 'admin/node/page/';
 		$config['total_rows'] = $nodes['num_rows'];
 		$config['per_page'] = $per_page; 
 		$config['uri_segment'] = 4;
@@ -171,6 +175,7 @@ class Node extends admin_Controller {
 		$this->session->set_flashdata($notify, $msg);
 		go_back();
 	}
+
 	/**
 	 * 配置表单验证规则
 	 *

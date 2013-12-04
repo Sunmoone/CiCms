@@ -20,7 +20,7 @@ class User extends admin_Controller {
 	public function index() 
 	{	
 		
-		$per_page = 10;
+		$per_page = 15;
 		$users = $this->user->get_users($per_page, $this->uri->segment(4));
 		$this->load->library('pagination');
 		$config['base_url'] = base_url() . 'admin/user/index/';
@@ -33,7 +33,7 @@ class User extends admin_Controller {
 		$this->pagination->initialize($config); 
 		
 		$this->_data['page'] = $this->pagination->create_links();
-		$this->_data['users_list'] = $users['data'];
+		$this->_data['user_list'] = $users['data'];
 
 		$this->layout->view('admin/user_list', $this->_data);
 	}
@@ -152,6 +152,17 @@ class User extends admin_Controller {
 
 		$this->session->set_flashdata($notify, $msg);
 		go_back();
+	}
+
+	/**
+	 * 更改用户密码
+	 *
+	 * @access public
+	 */
+	public function changepass()
+	{
+		$this->load->library('form_validation');
+		$this->layout->view('admin/changepass_view', $this->_data);
 	}
 
 	/**

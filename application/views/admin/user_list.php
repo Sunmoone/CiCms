@@ -25,8 +25,8 @@
 		<th width="">创建时间</th>
 		<th width="15%">操作</th>
 	</tr>
-	<?php if ($users_list):?>
-	<?php foreach ($users_list as $key => $val):?>
+	<?php if ($user_list):?>
+	<?php foreach ($user_list as $key => $val):?>
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['username'];?> (<?php echo $val['nickname'];?>)</td>

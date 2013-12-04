@@ -90,7 +90,7 @@ class Admin_Controller extends CI_Controller {
 
         if (!in_array($uri, $permission))
         {
-            show_error("没有权限!");
+            //show_error("没有权限!");
         }
     }
 

@@ -18,10 +18,4 @@ class Dashboard extends Admin_Controller {
 		$this->layout->view('admin/dashboard', $this->_data);
 	}
 
-	public function changePassword()
-	{
-		$this->load->library('form_validation');
-		$this->layout->view('admin/changePassword', $this->_data);
-	}
-
 }

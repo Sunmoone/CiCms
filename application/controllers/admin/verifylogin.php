@@ -102,8 +102,6 @@ class VerifyLogin extends CI_Controller {
 			}
 		}
 		$b[] = 'admin/dashboard';
-		$b[] = 'admin/dashboard/changePassword';
-
 		return $b;
 	}
 }

@@ -43,7 +43,7 @@ Cufon.replace('.caviar_dreams', { fontFamily: 'Caviar Dreams', hover: true });
 			<!-- <img src="application/views/admin/images/logo.png" class="fl"> --><!-- <img src="{$smarty.const.THEME_URL}/images/banner.png" class="fll" width="650px" height="65px"> --></a>
 	<div class="header_login clearfix">
 		欢迎管理员：<?php echo $this->admin_user['username'];?>&nbsp;&nbsp;
-		<img src="application/views/admin/images/checked_out.png"><a href="admin/dashboard/changePassword">修改密码</a>&nbsp;&nbsp;
+		<img src="application/views/admin/images/checked_out.png"><a href="admin/user/changepass">修改密码</a>&nbsp;&nbsp;
 		<!-- <img src="application/views/admin/images/write.gif"><a href="">修改资料</a> -->
 		<a class="btn_logout" href="admin/login/logout">登出</a>&nbsp;&nbsp;
 	</div>
