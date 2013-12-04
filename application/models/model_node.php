@@ -1,24 +1,17 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Model_node extends CI_Model {
-	/**
-	 * 获取所有节点
-	 *
-	 * @access private
-	 * @return array
-	 */
+	// 获取总记录数
+	public function record_count()
+	{
+		return $this->db->count_all("node");
+	}
+
+	// 获取所有节点 
 	public function get_nodes($limit=NULL, $offset=NULL,$where = array())
 	{
-		if ($limit)
-		{
-			$this->db->limit($limit);
-		}
-		if ($offset)
-		{
-			$this->db->offset($offset);
-		}
-		if ($where)
-		{
+		$this->db->limit($limit, $offset);
+		if ($where) {
 			$this->db->where($where[0], $where[1]);
 		}
 		$this->db->order_by('id', 'desc');
@@ -26,26 +19,16 @@ class Model_node extends CI_Model {
 
 		$query = $this->db->get('node');
 
-		if ($query->num_rows > 0)
-		{
-			return array(
-				'data' => $query->result_array(),
-				'num_rows' => $this->db->count_all_results('node')
-
-			);
-		}
-		else
-		{
-			return false;
-		}
+		if ($query->num_rows > 0) {
+			foreach($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
+		} 
+		return false;
 	}
-	/**
-	 * 获取单个节点信息
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return array 
-	 */
+	
+	// 获取单个节点信息
 	public function get_node_by_id($id)
 	{
 		$this->db->where('id', intval($id));

@@ -10,6 +10,7 @@ class Node extends admin_Controller {
 
 		$this->load->model('model_node', 'node', TRUE);
 		$this->load->library('form_validation');
+		$this->load->library('pagination');
 		$this->load->library('tree');
 		$this->_data['admin_url'] = uri_string();
 		$this->_data['menu'] = $this->menu;
@@ -26,24 +27,28 @@ class Node extends admin_Controller {
 	 */
 	public function index() 
 	{	
-		$per_page = 15;
-		$nodes = $this->node->get_nodes($per_page, $this->uri->segment(4));
-		$this->load->library('pagination');
-		$config['base_url'] = base_url() . 'admin/node/page/';
-		$config['total_rows'] = $nodes['num_rows'];
-		$config['per_page'] = $per_page; 
+		$config['base_url']    = base_url() . 'admin/node/page/';
+		$config['total_rows']  = $this->node->record_count();
+		$config['per_page']    = 10; 
 		$config['uri_segment'] = 4;
-		$config['next_link'] = '下一页';
-		$config['prev_link'] = '上一页';
+		$config['first_link']  = '首页';
+        $config['last_link']   = '尾页';
+		$config['next_link']   = '下一页';
+		$config['prev_link']   = '上一页';
+		$cionfig['num_links']  = 1;
 
 		$this->pagination->initialize($config); 
-		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$data = $this->node->get_nodes($config['per_page'], $page);
 		$this->_data['page'] = $this->pagination->create_links();
 
-		foreach($nodes['data'] as $k => $v) {
-			$nodes['data'][$k]['breadcrumbs'] = $this->breadcrumbs($v['id']);
+		if ($data) {
+			foreach($data as $k => $v) {
+				$data[$k]['breadcrumbs'] = $this->breadcrumbs($v['id']);
+			}
 		}
-		$this->_data['nodes_list'] = $nodes['data'];
+		
+		$this->_data['node_list'] = $data;
 		
 		$this->layout->view('admin/node_list', $this->_data);
 	}

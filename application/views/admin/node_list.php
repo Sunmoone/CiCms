@@ -24,8 +24,8 @@
 		<th width="">层级</td>
 		<th width="15%">操作</td>
 	</tr>
-	<?php if ($nodes_list):?>
-	<?php foreach($nodes_list as $key => $val):?>
+	<?php if ($node_list):?>
+	<?php foreach($node_list as $key => $val):?>
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['id'];?></td>
