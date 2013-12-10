@@ -18,7 +18,7 @@ class Front_Controller extends CI_Controller {
         $this->load->model('model_content', 'content', TRUE);
         $this->load->model('model_category', 'category', TRUE);
         $this->load->library('tree');
-        $categorys = $this->category->get_categorys();
+        $categorys = $this->category->get_category_list();
         if ($categorys) {
           $this->tree->setTree($categorys['data']);
           $this->data['category'] = $this->tree->buildTree();

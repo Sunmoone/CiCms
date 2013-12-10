@@ -22,32 +22,29 @@ class Category extends admin_Controller {
 	 */
 	public function index() 
 	{	
-		$per_page = 20;
-		$categorys = $this->category->get_categorys($per_page, $this->uri->segment(4));
-		if($categorys) 
-		{
-			$this->load->library('pagination');
-			$config['base_url'] = base_url() . 'admin/category/index/';
-			$config['total_rows'] = $categorys['num_rows'];
-			$config['per_page'] = $per_page; 
-			$config['uri_segment'] = 4;
-			$config['next_link'] = '下一页';
-			$config['prev_link'] = '上一页';
+		$this->load->library('pagination');
+		$config['base_url'] = base_url() . 'admin/category/index/';
+		$config['total_rows'] = $this->category->record_count();
+		$config['per_page'] = 20; 
+		$config['uri_segment'] = 4;
+		$config['first_link']  = '首页';
+        $config['last_link']   = '尾页';
+		$config['next_link']   = '下一页';
+		$config['prev_link']   = '上一页';
+		$cionfig['num_links']  = 1;
 
-			$this->pagination->initialize($config); 
-			
-			$this->_data['page'] = $this->pagination->create_links();
-
+		$this->pagination->initialize($config); 
+		$page = ($this->uri->segment(4))?$this->uri->segment(4):0;
+		$category_list = $this->category->get_category_list($config['per_page'], $page);
+		$this->_data['page'] = $this->pagination->create_links();
+		if ($category_list) {
 			$this->tree->tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
-			$this->tree->setTree($categorys['data']);
-			$cate_tree = $this->tree->getTree();
-			$this->_data['category_list'] = $cate_tree;
-		}
-		else
-		{
+		    $this->tree->setTree($category_list);
+		    $cate_tree = $this->tree->getTree();
+		    $this->_data['category_list'] = $cate_tree;
+		} else {
 			$this->_data['category_list'] = array();
-		}
-		
+		}	
 
 		$this->layout->view('admin/cate_list', $this->_data);
 	}
@@ -59,7 +56,7 @@ class Category extends admin_Controller {
 	 */
 	public function create()
 	{	
-		$categorys = $this->category->get_categorys();
+		$categorys = $this->category->get_category_list();
 		if ($categorys) {
 			//$this->tree->tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 			$this->tree->setTree($categorys['data']);

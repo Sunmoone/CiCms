@@ -1,38 +1,30 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Model_category extends CI_Model {
+
+	public function record_count()
+	{
+		return $this->db->count_all('category');
+	}
 	/**
 	 * 获取所有分类
 	 *
 	 * @access public
 	 * @return array
 	 */
-	public function get_categorys($limit=NULL, $offset=NULL)
+	public function get_category_list($limit=NULL, $offset=NULL)
 	{
-		if ($limit)
-		{
-			$this->db->limit($limit);
-		}
-		if ($offset)
-		{
-			$this->db->offset($offset);
-		}
+		$this->db->limit($limit, $offset);
 		$this->db->order_by('id', 'asc');
-
 		$query = $this->db->get('category');
-
 		if ($query->num_rows > 0)
 		{
-			return array(
-				'data' => $query->result_array(),
-				'num_rows' => $this->db->count_all_results('category')
-
-			);
+			foreach($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 	/**
 	 * 获取单个分类信息

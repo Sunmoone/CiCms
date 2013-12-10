@@ -32,7 +32,7 @@ class Node extends admin_Controller {
 		$config['per_page']    = 10; 
 		$config['uri_segment'] = 4;
 		$config['first_link']  = '首页';
-                $config['last_link']   = '尾页';
+        $config['last_link']   = '尾页';
 		$config['next_link']   = '下一页';
 		$config['prev_link']   = '上一页';
 		$cionfig['num_links']  = 1;
