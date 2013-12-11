@@ -14,7 +14,9 @@ class Model_category extends CI_Model {
 	 */
 	public function get_category_list($limit=NULL, $offset=NULL)
 	{
-		$this->db->limit($limit, $offset);
+		if ($limit) {
+			$this->db->limit($limit, $offset);
+		}
 		$this->db->order_by('id', 'asc');
 		$query = $this->db->get('category');
 		if ($query->num_rows > 0)
