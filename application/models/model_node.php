@@ -10,9 +10,11 @@ class Model_node extends CI_Model {
 	// 获取所有节点 
 	public function get_nodes($limit=NULL, $offset=NULL,$where = array())
 	{
-		$this->db->limit($limit, $offset);
 		if ($where) {
 			$this->db->where($where[0], $where[1]);
+		}
+		if ($limit) {
+			$this->db->limit($limit, $offset);
 		}
 		$this->db->order_by('id', 'desc');
 		$this->db->order_by('pid', 'desc');
