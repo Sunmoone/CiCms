@@ -24,28 +24,30 @@ class Content extends admin_Controller {
 	 */
 	public function index()
 	{
-		$per_page = 10;
-		$contents = $this->content->get_contents($per_page, $this->uri->segment(4));
 		$this->load->library('pagination');
 		$config['base_url'] = base_url() . 'admin/content/index/';
-		$config['total_rows'] = $contents['num_rows'];
-		$config['per_page'] = $per_page; 
+		$config['total_rows'] = $this->content->record_count();
+		$config['per_page'] = 10; 
 		$config['uri_segment'] = 4;
-		$config['next_link'] = '下一页';
-		$config['prev_link'] = '上一页';
+		$config['first_link']  = '首页';
+        $config['last_link']   = '尾页';
+		$config['next_link']   = '下一页';
+		$config['prev_link']   = '上一页';
+		$config['num_links']  = 1;
 
 		$this->pagination->initialize($config); 
 		$this->_data['page'] = $this->pagination->create_links();
-		if ($contents['data'])
-		{
-			foreach ($contents['data'] as $k => $v)
-			{
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$content_list = $this->content->get_content_list($config['per_page'], $page);
+		if ($content_list) {
+			foreach ($content_list as $k => $v) {
 				$userinfo = $this->user->get_user_by_id($v['user_id']);
-				$contents['data'][$k]['username'] = $userinfo[0]['username'];
+				$content_list[$k]['username'] = $userinfo['username'];
 			}
+			$this->_data['content_list'] = $contents_list;
+		} else {
+			$this->_data['content_list'] = array();
 		}
-		
-		$this->_data['contents_list'] = $contents['data'];
 		
 		$this->layout->view('admin/content_list', $this->_data);
 	}
@@ -58,16 +60,14 @@ class Content extends admin_Controller {
 	 */
 	public function create()
 	{
-		$categorys = $this->category->get_categorys();
-		if ($categorys) 
-		{
-			$this->tree->setTree($categorys['data']);
+		$category_list = $this->category->get_category_list();
+		if ($category_list) {
+			$this->tree->setTree($category_list);
 			$this->_data['category_list'] = $this->tree->getTree();
 		} else {
 			$this->_data['category_list'] = array();
 		}
 		
-
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
 			$this->_load_validation_rules();
@@ -101,27 +101,25 @@ class Content extends admin_Controller {
 	 */
 	public function update()
 	{
-		if (is_numeric($this->uri->segment(4)))
-		{	
+		if (is_numeric($this->uri->segment(4))) {	
 			$this->_id = $this->uri->segment(4);
 			$content = $this->content->get_content_by_id($this->uri->segment(4));
-			if ($content)
-			{
-				$this->_data['content'] = $content[0];
-			}
-			else
-			{
+			if ($content) {
+				$this->_data['content'] = $content;
+			} else {
 				show_error('文章不存在或已经被删除');
 			}
-		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+		} else {
+			show_404();
 		}
 
-		$categorys = $this->category->get_categorys();
-		$this->tree->setTree($categorys['data']);
-		$this->_data['category_list'] = $this->tree->getTree();
+		$category_list = $this->category->get_category_list();
+		if ($category_list) {
+			$this->tree->setTree();
+		    $this->_data['category_list'] = $this->tree->getTree();
+		} else {
+			$this->_data['category_list'] = array();
+		}
 
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{

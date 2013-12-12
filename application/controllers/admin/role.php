@@ -20,21 +20,27 @@ class Role extends admin_Controller {
 
 	public function index() 
 	{
-		$per_page = 10;
-		$roles = $this->role->get_roles($per_page, $this->uri->segment(4));
 		$this->load->library('pagination');
 		$config['base_url'] = base_url() . 'admin/role/index/';
-		$config['total_rows'] = $roles['num_rows'];
-		$config['per_page'] = $per_page; 
+		$config['total_rows'] = $this->role->record_count();
+		$config['per_page'] = 10; 
 		$config['uri_segment'] = 4;
-		$config['next_link'] = '下一页';
-		$config['prev_link'] = '上一页';
+		$config['first_link']  = '首页';
+        $config['last_link']   = '尾页';
+		$config['next_link']   = '下一页';
+		$config['prev_link']   = '上一页';
+		$config['num_links']  = 1;
 
 		$this->pagination->initialize($config); 
-		
 		$this->_data['page'] = $this->pagination->create_links();
-		$this->_data['roles_list'] = $roles['data'];
-
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$role_list = $this->role->get_role_list($config['per_page'], $page);
+		if ($role_list) {
+			$this->_data['role_list'] = $role_list;
+		} else {
+			$this->_data['role_list'] = array();
+		}
+		
 		$this->layout->view('admin/role_list', $this->_data);
 	}
 	/**
@@ -45,9 +51,6 @@ class Role extends admin_Controller {
 	 */
 	public function create()
 	{
-		$nodes = $this->node->get_nodes();
-		$this->_data['nodes_list'] = $nodes;
-
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
 			$this->_load_validation_rules();
@@ -81,18 +84,13 @@ class Role extends admin_Controller {
 		{	
 			$this->_id = $this->uri->segment(4);
 			$role = $this->role->get_role_by_id($this->uri->segment(4));
-			if ($role)
-			{
-				$this->_data['role'] = $role[0];
-			}
-			else
-			{
+			if ($role) {
+				$this->_data['role'] = $role;
+			} else {
 				show_error('角色不存在或已经被删除');
 			}
-		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+		} else {
+			show_404();
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
@@ -124,28 +122,19 @@ class Role extends admin_Controller {
 	{
 		if (is_numeric($this->uri->segment(4)))
 		{
-			$users = $this->user->get_users_by_roles_id($this->uri->segment(4));
-			
-			if ($users)
-			{
-				$this->_data['user_list'] = $users;
-			} 
-			else
-			{
+			$user_list = $this->user->get_user_by_role_id($this->uri->segment(4));
+			if ($user_list) {
+				$this->_data['user_list'] = $user_list;
+			} else {
 				$this->_data['user_list'] = array();
 			}
-		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+		} else {
+			show_404();
 		}
 		$role = $this->role->get_role_by_id($this->uri->segment(4));
-		if ($role)
-		{
-			$this->_data['role'] = $role[0];
-		}
-		else
-		{
+		if ($role) {
+			$this->_data['role'] = $role;
+		} else {
 			show_error('角色不存在或已经被删除');
 		}
 		
@@ -162,25 +151,23 @@ class Role extends admin_Controller {
 		if (is_numeric($this->uri->segment(4)))
 		{
 			$role = $this->role->get_role_by_id($this->uri->segment(4));
-			if ($role)
-			{
-				$role[0]['permission'] = explode(',', $role[0]['permission']);
-				$this->_data['role'] = $role[0];
-			}
-			else
-			{
+			if ($role) {
+				$role['permission'] = explode(',', $role['permission']);
+				$this->_data['role'] = $role;
+			} else {
 				show_error('角色不存在或已经被删除');
 			}
 
-			$nodes = $this->node->get_nodes();
-			$this->tree->setTree($nodes['data']);
-			$t = $this->tree->getTree();
-			
-			$this->_data['tree'] = $t;
-		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+			$node_list = $this->node->get_node_list();
+			if ($node_list) {
+				$this->tree->setTree($node_list);
+			    $t = $this->tree->getTree();
+			    $this->_data['tree'] = $t;
+			} else {
+				$thsi->_data['tree'] = array();
+			}	
+		} else {
+			show_404();
 		}
 		
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
@@ -253,7 +240,7 @@ class Role extends admin_Controller {
      */
 	public function _check_name($str)
 	{
-		if($this->roles->check_exist('name', $str, $this->_id))
+		if($this->role->check_exist('name', $str, $this->_id))
 		{
 			$this->form_validation->set_message('_check_name', '已经存在一个为 '.$str.' 的名称');
 			

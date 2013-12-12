@@ -19,30 +19,39 @@ class User extends admin_Controller {
 
 	public function index() 
 	{	
-		
-		$per_page = 15;
-		$users = $this->user->get_users($per_page, $this->uri->segment(4));
 		$this->load->library('pagination');
 		$config['base_url'] = base_url() . 'admin/user/index/';
-		$config['total_rows'] = $users['num_rows'];
-		$config['per_page'] = $per_page; 
+		$config['total_rows'] = $this->user->record_count();
+		$config['per_page'] = 15; 
 		$config['uri_segment'] = 4;
-		$config['next_link'] = '下一页';
-		$config['prev_link'] = '上一页';
+		$config['first_link']  = '首页';
+        $config['last_link']   = '尾页';
+		$config['next_link']   = '下一页';
+		$config['prev_link']   = '上一页';
+		$config['num_links']  = 1;
 
 		$this->pagination->initialize($config); 
-		
 		$this->_data['page'] = $this->pagination->create_links();
-		$this->_data['user_list'] = $users['data'];
-
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$user_list = $this->user->get_user_list($config['per_page'], $page);
+		if ($user_list) {
+			$this->_data['user_list'] = $user_list;
+		} else {
+			$this->_data['user_list'] = array();
+		}
+		
 		$this->layout->view('admin/user_list', $this->_data);
 	}
 
 	public function create() 
 	{
-		$roles = $this->role->get_roles();
-		$this->_data['role_list'] = $roles['data'];
-
+		$role_list = $this->role->get_role_list();
+		if ($role_list) {
+			$this->_data['role_list'] = $role_list;
+		} else {
+			$this->_data['role_list'] = array();
+		}
+		
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
 			$this->_load_validation_rules();
@@ -76,25 +85,23 @@ class User extends admin_Controller {
 	 */
 	public function update()
 	{	
-		if (is_numeric($this->uri->segment(4)))
-		{	
+		if (is_numeric($this->uri->segment(4))) {	
 			$this->_id = $this->uri->segment(4);
 			$user = $this->user->get_user_by_id($this->uri->segment(4));
-			if ($user)
-			{
-				$this->_data['user'] = $user[0];
-			}
-			else
-			{
+			if ($user) {
+				$this->_data['user'] = $user;
+			} else {
 				show_error('用户不存在或已经被删除');
 			}
+		} else {
+			show_404();
 		}
-		else
-		{
-			show_error('禁止访问：危险操作');
+		$role_list = $this->role->get_role_list();
+		if ($role_list) {
+			$this->_data['role_list'] = $role_list;
+		} else {
+			$this->_data['role_list'] = array();
 		}
-		$roles = $this->role->get_roles();
-		$this->_data['role_list'] = $roles['data'];
 
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{

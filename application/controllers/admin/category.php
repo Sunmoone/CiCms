@@ -35,8 +35,8 @@ class Category extends admin_Controller {
 
 		$this->pagination->initialize($config); 
 		$page = ($this->uri->segment(4))?$this->uri->segment(4):0;
-		$category_list = $this->category->get_category_list($config['per_page'], $page);
 		$this->_data['page'] = $this->pagination->create_links();
+		$category_list = $this->category->get_category_list($config['per_page'], $page);
 		if ($category_list) {
 			$this->tree->tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 		    $this->tree->setTree($category_list);

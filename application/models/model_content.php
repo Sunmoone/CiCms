@@ -1,53 +1,39 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Model_content extends CI_Model {
-
-	/**
-	 * 获取文章列表
-	 *
-	 * @access public
-	 * @return array
-	 */
-	public function get_contents($limit=NULL, $offset=NULL, $in = array())
+	// 获取文章总数
+    public function record_count()
+	{
+		return $this->db->count_all("content");
+	}
+	
+	// 获取文章列表
+	public function get_content_list($limit=NULL, $offset=NULL, $in = array())
 	{
 		$this->db->select('content.*, category.name as cat_name');
 		$this->db->join('category', 'content.category_id = category.id', 'left');
 		if ($limit)
 		{
-			$this->db->limit($limit);
-		}
-		if ($offset)
-		{
-			$this->db->offset($offset);
+			$this->db->limit($limit, $offset);
 		}
 		if ($in)
 		{
 			$this->db->where_in('category_id', $in);
 		}
 		$this->db->order_by('id', 'desc');
-
 		$query = $this->db->get('content');
 
 		if ($query->num_rows > 0)
 		{
-			return array(
-				'data' => $query->result_array(),
-				'num_rows' => $this->db->count_all_results('content')
-
-			);
+			foreach($query->result_array as $row) {
+				$data[] = $row;
+			}
+			return $data;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
-	/**
-	 * 获取单个文章
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return array 
-	 */
+
+	// 获取单个文章
 	public function get_content_by_id($id)
 	{
 		$this->db->where('id', intval($id));
@@ -55,12 +41,9 @@ class Model_content extends CI_Model {
 
 		if ($query->num_rows() == 1)
 		{
-			return $query->result_array();
+			return $query->row_array();
 		}
-		else
-		{
-			return FALSE;
-		}
+		return FALSE;
 	}
 	/**
 	 * 添加一篇文章

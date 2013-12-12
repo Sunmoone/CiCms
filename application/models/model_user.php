@@ -1,7 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Model_user extends CI_Model {
-
 	/**
 	 * 标识用户的唯一键 {username, nickname, email}
 	 * 
@@ -9,7 +8,11 @@ class Model_user extends CI_Model {
 	 * @var array
 	 */
 	private $_unique_key = array('username', 'nickname', 'email');
-
+    // 获取总记录数
+	public function record_count()
+	{
+		return $this->db->count_all("user");
+	}
 	/**
 	 * 用户登录时检查用户是否存在
 	 * 
@@ -24,17 +27,11 @@ class Model_user extends CI_Model {
 		$this->db->where('password = ' . "'" . sha1($password) . "'");
 		$this->db->join('role', 'role.id=user.role_id');
 		$this->db->limit(1);
-
 		$query = $this->db->get();
-
-		if ($query->num_rows() == 1)
-		{
-			return $query->result();
+		if ($query->num_rows() == 1) {
+			return $query->row_array();
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 	/**
 	 * 获取所有用户信息
@@ -42,76 +39,50 @@ class Model_user extends CI_Model {
 	 * @access public
 	 * @return array - 用户信息
 	 */
-	public function get_users($limit=NULL, $offset=NULL) 
+	public function get_user_list($limit=NULL, $offset=NULL) 
 	{
 		$this->db->select('user.*,role.name');
 		$this->db->join('role', 'role.id=user.role_id', 'left');;
-		if ($limit)
-		{
-			$this->db->limit($limit);
-		}
-		if ($offset)
-		{
-			$this->db->offset($offset);
+		if ($limit) {
+			$this->db->limit($limit, $offset);
 		}
 		$this->db->order_by('user.id', 'desc');
-
 		$query = $this->db->get('user');
 
-		if ($query->num_rows() > 0)
-		{
-			return array(
-				'data' => $query->result_array(),
-				'num_rows' => $this->db->count_all_results('user')
-			);
+		if ($query->num_rows() > 0) {
+			foreach($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
-	/**
-	 * 获取单个用户信息
-	 *
-	 * @access public
-	 * @return array - 用户信息
-	 */
+
+	// 获取单个用户信息
 	public function get_user_by_id($id)
 	{
 		$this->db->where('id', intval($id));
 		$this->db->limit(1);
 		$query = $this->db->get('user');
 
-		if ($query->num_rows() == 1)
-		{
-			return $query->result_array();
+		if ($query->num_rows() == 1) {
+			return $query->row_array();
 		}
-		else
-		{
-			return FALSE;
-		}
-
+		return FALSE;
 	}
-	/**
-	 * 获取某个角色的所有用户
-	 *
-	 * @access public
-	 * @return array - 用户信息
-	 */
-	public function get_users_by_roles_id($roles_id)
+	
+	// 获取某个角色的所有用户
+	public function get_user_by_role_id($role_id)
 	{
-		$this->db->where('role_id', intval($roles_id));
-
+		$this->db->where('role_id', intval($role_id));
 		$query = $this->db->get('user');
-
-		if ($query->num_rows() > 0)
-		{
-			return $query->result_array();
+		if ($query->num_rows() > 0) {
+			foreach($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
 		}
-		else
-		{
-			return FALSE;
-		}
+		return FALSE;
 	}
 	/**
      * 添加一个用户

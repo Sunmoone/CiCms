@@ -35,11 +35,11 @@ class Node extends admin_Controller {
         $config['last_link']   = '尾页';
 		$config['next_link']   = '下一页';
 		$config['prev_link']   = '上一页';
-		$cionfig['num_links']  = 1;
+		$config['num_links']  = 1;
 
 		$this->pagination->initialize($config); 
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-		$data = $this->node->get_nodes($config['per_page'], $page);
+		$data = $this->node->get_node_list($config['per_page'], $page);
 		$this->_data['page'] = $this->pagination->create_links();
 
 		if ($data) {
@@ -87,8 +87,12 @@ class Node extends admin_Controller {
 				go_back();
 			}
 		} 
-		$nodes = $this->node->get_nodes(NULL,NULL,array('level !=', 3));
-		$this->_data['nodes_list'] = $nodes['data'];
+		$node_list = $this->node->get_node_list(NULL,NULL,array('level !=', 3));
+		if ($node_list) {
+			$this->_data['node_list'] = $node_list;
+		} else {
+			$this->_data['node_list'] = array();
+		}	
 
 		$this->layout->view('admin/node_create_view', $this->_data);
 	}
@@ -113,8 +117,12 @@ class Node extends admin_Controller {
 		} else {
 			show_404();
 		}
-		$nodes = $this->node->get_nodes(NULL,NULL,array('level !=', 3));
-		$this->_data['nodes_list'] = $nodes['data'];
+		$node_list = $this->node->get_node_list(NULL,NULL,array('level !=', 3));
+		if ($node_list) {
+			$this->_data['node_list'] = $node_list;
+		} else {
+			$this->_data['node_list'] = array();
+		}	
 
 		if ($this->input->server('REQUEST_METHOD') == "POST")
 		{

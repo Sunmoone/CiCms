@@ -8,7 +8,7 @@ class Model_node extends CI_Model {
 	}
 
 	// 获取所有节点 
-	public function get_nodes($limit=NULL, $offset=NULL,$where = array())
+	public function get_node_list($limit=NULL, $offset=NULL,$where = array())
 	{
 		if ($where) {
 			$this->db->where($where[0], $where[1]);

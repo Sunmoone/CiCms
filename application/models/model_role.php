@@ -2,37 +2,28 @@
 
 class Model_role extends CI_Model {
 
-	/**
-	 * 获取所有的角色
-	 *
-	 * @access public
-	 * @return array 
-	 */
-	public function get_roles($limit=NULL, $offset=NULL)
+	// 获取总记录数
+	public function record_count()
 	{
-		if ($limit)
-		{
-			$this->db->limit($limit);
-		}
-		if ($offset)
-		{
-			$this->db->offset($offset);
+		return $this->db->count_all("role");
+	}
+	
+	// 获取所有的角色
+	public function get_role_list($limit=NULL, $offset=NULL)
+	{
+		if ($limit) {
+			$this->db->limit($limit, $offset);
 		}
 		$this->db->order_by('id', 'desc');
-
 		$query = $this->db->get('role');
 
-		if ($query->num_rows > 0)
-		{
-			return array(
-				'data' => $query->result_array(),
-				'num_rows' => $this->db->count_all_results('role')
-			);
+		if ($query->num_rows > 0) {
+			foreach($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 	/**
 	 * 获取单个角色信息
@@ -45,15 +36,10 @@ class Model_role extends CI_Model {
 		$this->db->where('id', intval($id));
 		$query = $this->db->get('role');
 
-		if ($query->num_rows() == 1)
-		{
-			return $query->result_array();
+		if ($query->num_rows() == 1) {
+			return $query->row_array();
 		}
-		else
-		{
-			return FALSE;
-		}
-
+		return FALSE;
 	}
 	/**
      * 添加一个角色

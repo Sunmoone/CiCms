@@ -5,7 +5,7 @@
 </div>
      
 <div class="btn_blk">
-	<div class="fl"><?php echo $page;?></div>
+	<div class="fl"></div>
 	<div class="fr">
 		<a href="admin/content/delete" class="btn2 fr ml20  del_all">删除</a>
 		<a href="admin/content/create" class="btn1 fr">新增</a>
@@ -24,8 +24,8 @@
 		<th width="15%">发布时间</td>
 		<th width="15%">操作</td>
 	</tr>
-	<?php if ($contents_list):?>
-	<?php foreach($contents_list as $key => $val):?>
+	<?php if ($content_list):?>
+	<?php foreach($content_list as $key => $val):?>
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['title'];?></td>
@@ -51,8 +51,8 @@
 </form>
 
 <div class="btn_blk">
-	<div class="fr">
-		<?php //echo $page;?>
+	<div class="fr page">
+		<?php echo $page;?>
 	</div>
 </div>
 <script type="text/javascript" charset="utf-8">

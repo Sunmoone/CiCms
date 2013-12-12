@@ -22,8 +22,8 @@
 		<th width="">描述</td>
 		<th width="25%">操作</td>
 	</tr>
-	<?php if ($roles_list):?>
-	<?php foreach($roles_list as $key => $val):?>
+	<?php if ($role_list):?>
+	<?php foreach($role_list as $key => $val):?>
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['name'];?></td>
