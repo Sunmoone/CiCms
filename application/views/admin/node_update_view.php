@@ -9,12 +9,12 @@
 <?php echo (($this->session->flashdata('error')))?'<div class="error"><ul><li>' . $this->session->flashdata('error') . '</li></ul></div>':'';?>
 <form action="admin/node/update/<?php echo $node['id'];?>" method="post" accept-charset="utf-8">
   <div class="con_blk">
-    <h3 class="light_gray">节点名称</h3>
-    <input name="name" type="text" value="<?php echo $node['name'];?>" class="text">
-  </div>
-  <div class="con_blk">
       <h3 class="light_gray">节点标题</h3>
       <input name="title" value="<?php echo $node['title'];?>" type="text" class="text">
+  </div>
+  <div class="con_blk">
+    <h3 class="light_gray">节点标识</h3>
+    <input name="name" type="text" value="<?php echo $node['name'];?>" class="text">
   </div>
   <div class="con_blk">
       <dt class="light_gray">选择父节点</dt>
@@ -22,8 +22,8 @@
         <dd>
         <select name="pid">
           <option value="0">顶级</option>
-          <?php if ($nodes_list):?>
-          <?php foreach($nodes_list as $val):?>
+          <?php if ($node_list):?>
+          <?php foreach($node_list as $val):?>
             <option value="<?php echo $val['id'];?>" <?php if ($val['id'] == $node['pid']):?> selected<?php endif;?>><?php echo $val['name'];?></option>
           <?php endforeach;?>
           <?php endif;?>

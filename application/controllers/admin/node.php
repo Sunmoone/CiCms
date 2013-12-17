@@ -153,13 +153,13 @@ class Node extends admin_Controller {
 	 */
 	public function delete()
 	{
+		$deleted = 0;
 		if ($this->input->server('SERVER_METHOD') == "POST")
 		{
-			$nodes = $this->input->post('check', TRUE);
-			$deleted = 0;
-			if ($nodes && is_array($nodes))
+			$node_list = $this->input->post('check', TRUE);
+			if ($node_list && is_array($node_list))
 			{
-				foreach ($nodes as $node)
+				foreach ($node_list as $node)
 				{   
 					/* 存在子节点 不能删除 */
 					if ($this->node->get_childs_by_id($node))
@@ -171,7 +171,6 @@ class Node extends admin_Controller {
 					{
 						$deleted++;
 					}
-					
 				}
 			}
 		} else {

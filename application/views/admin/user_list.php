@@ -39,7 +39,7 @@
 		<td><?php echo date('Y-m-d H:i:s', $val['created']);?></td>
 		<td class="tc">
 			<a href="admin/user/update/<?php echo $val['id'];?>"><img src="<?php echo base_url();?>application/views/admin/images/i.gif" class="ico_edit" title="编辑"></a>&nbsp;&nbsp;
-			<a href="admin/user/delete" class="delete"><img src="<?php echo base_url();?>application/views/admin/images/i.gif" class="ico_del" title="删除"></a>
+			<a href="admin/user/delete/<?php echo $val['id'];?>" class="delete"><img src="<?php echo base_url();?>application/views/admin/images/i.gif" class="ico_del" title="删除"></a>
 		</td>
 	</tr>
 	<?php endforeach;?>

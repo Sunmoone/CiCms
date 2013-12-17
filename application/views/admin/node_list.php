@@ -18,8 +18,9 @@
 	<tr>
 		<th width="55"><input type="checkbox" class="checkAll" rel="check[]"/></th>
 		<th width="">节点ID</td>
-		<th width="">节点名称</td>
 		<th width="">节点标题</td>
+		<th width="">节点标识</td>
+		<th width="">节点路径</td>
 		<th width="">父节点</td>
 		<th width="">层级</td>
 		<th width="15%">操作</td>
@@ -29,8 +30,9 @@
 	<tr <?php if (($key+1) % 2) {?>class="odd"<?php }?>>
 		<td><input type="checkbox" name="check[]" value="<?php echo $val['id'];?>"></td>
 		<td><?php echo $val['id'];?></td>
-		<td><?php echo $val['breadcrumbs'];?></td>
 		<td><?php echo $val['title'];?></td>
+		<td><?php echo $val['name'];?></td>
+		<td><?php echo $val['breadcrumbs'];?></td>
 		<td><?php echo $val['pid'];?></td>
 		<td><?php echo $val['level'];?></td>
 		<td class="tc">
@@ -41,7 +43,7 @@
 	<?php endforeach;?>
 	<?php else: ?>
     <tr class="even">
-    	<td colspan="7">没有任何节点</td>
+    	<td colspan="8">没有任何节点</td>
     </tr>
     <?php endif; ?>
 </table>

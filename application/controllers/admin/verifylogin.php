@@ -20,7 +20,6 @@ class VerifyLogin extends CI_Controller {
 
 		if ($this->form_validation->run() == FALSE)
 		{
-
 			$this->load->view('admin/login_view');
 		}
 		else
@@ -37,34 +36,30 @@ class VerifyLogin extends CI_Controller {
 
 		if ($user)
 		{
-			$sess_array = array();
-			foreach($user as $row)
+			if (!$user['role_status'])
 			{
-				if (!$row->role_status)
-				{
-					$this->session->set_flashdata('error', '你所在的组被限制登录！');
-					go_back();
-				}
-				if (!$row->status)
-				{
-					$this->session->set_flashdata('error', '你的账号被限制登录！');
-					go_back();
-				}
-
-				$permission = explode(',', $row->permission);
-
-				$permission = $this->permission_to_array($permission);
-
-				$sess_array = array(
-					'id' => $row->id,
-					'username' => $row->username,
-					'role_id' => $row->role_id,
-					'permission' => $permission,
-				);
-
-				$this->session->set_userdata('admin_user', $sess_array);
-				
+				$this->session->set_flashdata('error', '你所在的组被限制登录！');
+				go_back();
 			}
+			if (!$user['status'])
+			{
+				$this->session->set_flashdata('error', '你的账号被限制登录！');
+				go_back();
+			}
+
+			$permission = explode(',', $user['permission']);
+
+			$permission = $this->permission_to_array($permission);
+
+			$sess_array = array(
+				'id' => $user['id'],
+				'username' => $user['username'],
+				'role_id' => $user['role_id'],
+				'permission' => $permission,
+			);
+
+			$this->session->set_userdata('admin_user', $sess_array);
+				
 			return TRUE;
 		}
 		else

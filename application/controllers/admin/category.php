@@ -56,10 +56,10 @@ class Category extends admin_Controller {
 	 */
 	public function create()
 	{	
-		$categorys = $this->category->get_category_list();
-		if ($categorys) {
+		$category_list = $this->category->get_category_list();
+		if ($category_list) {
 			//$this->tree->tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
-			$this->tree->setTree($categorys['data']);
+			$this->tree->setTree($category_list);
 			$cate_tree = $this->tree->getTree();
 			$this->_data['category_list'] = $cate_tree;
 		}

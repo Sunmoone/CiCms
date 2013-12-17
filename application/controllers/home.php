@@ -9,9 +9,6 @@ class Home extends Front_Controller {
 	 */
 	public function index()
 	{
-		$article = $this->content->get_contents(5);
-		$this->data['new_list'] = $article['data'];
-		
 		$this->layout->view('home_view', $this->data);
 	}
 }

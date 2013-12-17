@@ -7,10 +7,10 @@
 <?php }?>
 <?php echo (($this->session->flashdata('success')))?'<div class="success"><ul><li>' . $this->session->flashdata('success') . '</li></ul></div>':'';?>
 <?php echo (($this->session->flashdata('error')))?'<div class="error"><ul><li>' . $this->session->flashdata('error') . '</li></ul></div>':'';?>
-<form action="admin/user/changepass" method="post" accept-charset="utf-8">
+<form action="admin/user/changepwd" method="post" accept-charset="utf-8">
     <div class="con_blk">
       <h3 class="light_gray">旧密码</h3>
-    	<input name="old_pass" type="text" class="text">
+    	<input name="old_pwd" type="text" class="text">
     </div>
 
     <div class="con_blk">

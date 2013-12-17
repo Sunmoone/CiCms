@@ -135,28 +135,35 @@ class User extends admin_Controller {
 	 */
 	public function delete()
 	{
-		$users = $this->input->post('check', TRUE);
 		$deleted = 0;
-		if ($users && is_array($users))
+		if ($this->input->server('SERVER_METHOD') == "POST")
 		{
-			foreach ($users as $user)
-			{   /* 不能删除自己 */
-				if ($user == $this->admin_user['id'])
-				{
-					continue;
-				}
+			$user_list = $this->input->post('check', TRUE);
+			if ($user_list && is_array($user_list))
+			{
+				foreach ($user_list as $user)
+				{   /* 不能删除自己 */
+					if ($user == $this->admin_user['id'])
+					{
+						continue;
+					}
 
-				$query = $this->user->delete_user($user);
-				if ($query)
-				{
-					$deleted++;
+					$query = $this->user->delete_user($user);
+					if ($query)
+					{
+						$deleted++;
+					}
 				}
-				
+			}
+		} else {
+			$user = $this->uri->segment(4);
+			if ($this->user->delete_user($user))
+			{
+				$deleted++;
 			}
 		}
 		$msg = ($deleted > 0) ? '用户已经删除' : '没有用户被删除';
 		$notify = ($deleted > 0) ? 'success' : 'error';
-
 		$this->session->set_flashdata($notify, $msg);
 		go_back();
 	}
@@ -166,10 +173,32 @@ class User extends admin_Controller {
 	 *
 	 * @access public
 	 */
-	public function changepass()
+	public function changepwd()
 	{
-		$this->load->library('form_validation');
-		$this->layout->view('admin/changepass_view', $this->_data);
+		if ($this->input->server('REQUEST_METHOD')=='POST') {
+			$this->_load_validation_changepwd();
+			if ($this->form_validation->run() != FALSE) {
+				if ($this->user->update_user($this->admin_user['id'], array('password'=>sha1($password)))) {
+					$this->session->set_flashdata('success', '密码修改成功！');
+			        go_back();
+				}
+			}
+		}
+		$this->layout->view('admin/changepwd_view', $this->_data);
+	}
+
+	private function _load_validation_changepwd() {
+		$this->form_validation->set_rules('old_pwd', '旧密码', 'trim|required|min_length[6]|callback__check_old_pwd');
+		$this->form_validation->set_rules('password', '新密码', 'trim|required|min_length[6]|matches[confirm]');
+		$this->form_validation->set_rules('confirm', '确认密码', 'trim|required|min_length[6]');
+	}
+
+	public function _check_old_pwd($old_pwd) {
+		$pwd = $this->user->get_user_field($this->admin_user['id'],'password');
+		if (sha1($old_pwd) != $pwd) {
+			$this->form_validation->set_message('_check_old_pwd', '旧密码不正确！');
+			return FALSE;
+		}
 	}
 
 	/**
@@ -181,8 +210,7 @@ class User extends admin_Controller {
 	private function _load_validation_rules()
 	{
 		$this->form_validation->set_rules('username', '用户名', 'trim|required|alpha_numeric|callback__check_name');
-		if($this->_action)
-		{
+		if ($this->_action) {
 			$this->form_validation->set_rules('password', '密码', 'trim|required|min_length[6]|matches[confirm]');
 			$this->form_validation->set_rules('confirm', '确认密码', 'trim|required|min_length[6]');
 		}

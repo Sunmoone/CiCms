@@ -70,6 +70,17 @@ class Model_user extends CI_Model {
 		}
 		return FALSE;
 	}
+
+	public function get_user_field($uid, $name) 
+	{
+		$query = $this->db->select($name)->get_where('user', array('id' => $uid));
+
+		if ($query->num_rows > 0) {
+			 $user = $query->row_array();
+			 return $user[$name];
+		}
+		return FALSE;
+	}
 	
 	// 获取某个角色的所有用户
 	public function get_user_by_role_id($role_id)

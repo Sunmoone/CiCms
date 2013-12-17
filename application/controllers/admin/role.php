@@ -197,21 +197,29 @@ class Role extends admin_Controller {
 	 */
 	public function delete()
 	{
-		$roles = $this->input->post('check', TRUE);
 		$deleted = 0;
-		if ($roles && is_array($roles))
+		if ($this->input->server('SERVER_METHOD') == "POST")
 		{
-			foreach ($roles as $role)
-			{ 
-				$query = $this->role->delete_role($role);
-				if ($query)
-				{
-					$deleted++;
+			$role_list = $this->input->post('check', TRUE);
+			if ($role_list && is_array($role_list))
+			{
+				foreach ($role_list as $role)
+				{ 
+					$query = $this->role->delete_role($role);
+					if ($query)
+					{
+						$deleted++;
+					}
 				}
-				
+			}
+		} else {
+			$role = $this->uri->segment(4);
+			if ($this->role->delete_role($role))
+			{
+				$deleted++;
 			}
 		}
-		$msg = ($deleted > 0) ? '用户已经删除' : '没有用户被删除';
+		$msg = ($deleted > 0) ? '角色已经删除' : '没有角色被删除';
 		$notify = ($deleted > 0) ? 'success' : 'error';
 
 		$this->session->set_flashdata($notify, $msg);
