@@ -178,7 +178,7 @@ class User extends admin_Controller {
 		if ($this->input->server('REQUEST_METHOD')=='POST') {
 			$this->_load_validation_changepwd();
 			if ($this->form_validation->run() != FALSE) {
-				if ($this->user->update_user($this->admin_user['id'], array('password'=>sha1($password)))) {
+				if ($this->user->update_user($this->admin_user['id'], array('password'=>sha1($this->input->post('password', TRUE))))) {
 					$this->session->set_flashdata('success', '密码修改成功！');
 			        go_back();
 				}
