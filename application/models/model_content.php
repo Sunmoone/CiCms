@@ -2,7 +2,7 @@
 
 class Model_content extends CI_Model {
 	// 获取文章总数
-    public function record_count()
+        public function record_count()
 	{
 		return $this->db->count_all("content");
 	}
@@ -45,27 +45,16 @@ class Model_content extends CI_Model {
 		}
 		return FALSE;
 	}
-	/**
-	 * 添加一篇文章
-	 *
-	 * @access public
-	 * @param array $data
-	 * @return array
-	 */
+
+	// 添加一篇文章
 	public function add_content($data)
 	{
 		$this->db->insert('content', $data);
 
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
-	/**
-     * 修改一篇文章
-     * 
-     * @access public
-     * @param int - $id 文章ID
-	 * @param array - $data 
-     * @return bool - success/fail
-     */	
+
+        // 修改一篇文章
 	public function update_content($id, $data)
 	{
 		$this->db->where('id', intval($id));
@@ -73,13 +62,8 @@ class Model_content extends CI_Model {
 
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
-	/**
-     * 删除一篇文章
-     * 
-     * @access public
-	 * @param  int - $id 文章id
-     * @return bool - success/fail
-     */
+
+        // 删除一篇文章
 	public function delete_content($id)
 	{
 		$this->db->delete('content', array('id' => intval($id))); 
